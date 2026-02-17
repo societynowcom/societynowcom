@@ -1,0 +1,38 @@
+name: Update Profile README
+
+on:
+  schedule:
+    - cron: '40 22 * * *'  # 매일 07:40 KST
+    - cron: '40 23 * * *'  # 매일 08:40 KST
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Update README with latest articles
+        run: node scripts/update-profile.js
+
+      - name: Check for changes
+        id: check
+        run: |
+          git add -A
+          if git diff --staged --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          git config user.name "sonow-bot"
+          git config user.email "societynowcom@gmail.com"
+          git commit -m "auto: $(date +%Y-%m-%d) 프로필 업데이트"
+          git push
