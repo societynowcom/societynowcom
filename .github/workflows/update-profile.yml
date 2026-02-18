@@ -2,8 +2,8 @@ name: Update Profile README
 
 on:
   schedule:
-    - cron: '40 22 * * *'  # 매일 07:40 KST
-    - cron: '40 23 * * *'  # 매일 08:40 KST
+    - cron: '0 23 * * *'   # 매일 08:00 KST
+    - cron: '0 0 * * *'   # 매일 09:00 KST
   workflow_dispatch:
 
 jobs:
